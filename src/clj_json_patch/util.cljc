@@ -235,7 +235,7 @@
           (replace-patch-value obj parent-path
                                (replace-patch-value parent (first (last segs)) val)))
         (cond (map? obj)
-              (assoc obj (->key (second (first segs))) val)
+              (assoc obj (->key (eval-escape-characters (second (first segs)))) val)
               (vector? obj)
               (let [idx (Integer/parseInt (second (re-find #"/(\d+)" path)))]
                 (vec (concat (subvec obj 0 idx)
@@ -256,7 +256,7 @@
             (replace-patch-value obj parent-path
                                  (remove-patch-value parent (first (last segs)))))
           (cond (map? obj)
-                (dissoc obj (->key (second (first segs))))
+                (dissoc obj (->key (eval-escape-characters (second (first segs)))))
                 (vector? obj)
                 (let [idx #?(:clj (Integer/parseInt (second (re-find #"/(\d+)" path)))
                              :cljs (js/parseInt (second (re-find #"/(\d+)" path))))]
@@ -280,7 +280,7 @@
             (replace-patch-value obj parent-path
                              (remove-patch-value parent (first (last segs)))))
           (cond (map? obj)
-                (dissoc obj (second (first segs)))
+                (dissoc obj (eval-escape-characters (second (first segs))))
                 (vector? obj)
               (let [idx #?(:clj (Integer/parseInt (second (re-find #"/(\d+)" path)))
                            :cljs (js/parseInt (second (re-find #"/(\d+)" path))))]
